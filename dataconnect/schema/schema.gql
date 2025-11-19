@@ -1,0 +1,39 @@
+type User @table {
+  email: String!
+  displayName: String!
+  createdAt: Timestamp!
+  photoUrl: String
+}
+
+type Meeting @table {
+  meetingId: String!
+  title: String!
+  createdAt: Timestamp!
+  startTime: Timestamp!
+  description: String
+  endTime: Timestamp
+  password: String
+  creator: User
+}
+
+type Participant @table(key: ["user", "meeting"]) {
+  joinedAt: Timestamp!
+  role: String!
+  leftAt: Timestamp
+  user: User!
+  meeting: Meeting!
+}
+
+type ChatMessage @table {
+  content: String!
+  sentAt: Timestamp!
+  meeting: Meeting
+  sender: User
+}
+
+type MeetingHistory @table(key: ["user", "meeting"]) {
+  joinedAt: Timestamp!
+  leftAt: Timestamp
+  user: User!
+  meeting: Meeting!
+}

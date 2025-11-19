@@ -1,0 +1,70 @@
+mutation CreateSeedData @transaction @auth(level: PUBLIC, insecureReason: "This operation is used to populate the database with seed data and is safe to expose to the public") {
+  user_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      createdAt: "2024-04-24T12:00:00Z",
+      displayName: "demouser1",
+      email: "demouser1@example.com",
+      photoUrl: "https://example.com/demouser1.jpg"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      createdAt: "2024-04-24T12:00:00Z",
+      displayName: "demouser2",
+      email: "demouser2@example.com",
+      photoUrl: "https://example.com/demouser2.jpg"
+    }
+  ])
+  meeting_insertMany(data: [
+    {
+      id: "650e8400-e29b-41d4-a716-446655440000",
+      creatorId: "550e8400-e29b-41d4-a716-446655440000",
+      createdAt: "2024-04-24T12:00:00Z",
+      description: "Demo meeting 1",
+      endTime: "2024-04-24T13:00:00Z",
+      meetingId: "demo-meeting-1",
+      startTime: "2024-04-24T12:00:00Z",
+      title: "Demo Meeting 1"
+    },
+    {
+      id: "650e8400-e29b-41d4-a716-446655440001",
+      creatorId: "550e8400-e29b-41d4-a716-446655440001",
+      createdAt: "2024-04-24T13:00:00Z",
+      description: "Demo meeting 2",
+      endTime: "2024-04-24T14:00:00Z",
+      meetingId: "demo-meeting-2",
+      startTime: "2024-04-24T13:00:00Z",
+      title: "Demo Meeting 2"
+    }
+  ])
+  participant_insertMany(data: [
+    {
+      userId: "550e8400-e29b-41d4-a716-446655440000",
+      meetingId: "650e8400-e29b-41d4-a716-446655440000",
+      joinedAt: "2024-04-24T12:00:00Z",
+      leftAt: "2024-04-24T13:00:00Z",
+      role: "host"
+    },
+    {
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      meetingId: "650e8400-e29b-41d4-a716-446655440001",
+      joinedAt: "2024-04-24T13:00:00Z",
+      leftAt: "2024-04-24T14:00:00Z",
+      role: "guest"
+    }
+  ])
+  chatMessage_insertMany(data: [
+    {
+      meetingId: "650e8400-e29b-41d4-a716-446655440000",
+      senderId: "550e8400-e29b-41d4-a716-446655440000",
+      content: "Hello from demouser1 in demo-meeting-1",
+      sentAt: "2024-04-24T12:01:00Z"
+    },
+    {
+      meetingId: "650e8400-e29b-41d4-a716-446655440001",
+      senderId: "550e8400-e29b-41d4-a716-446655440001",
+      content: "Hello from demouser2 in demo-meeting-2",
+      sentAt: "2024-04-24T13:01:00Z"
+    }
+  ])
+}

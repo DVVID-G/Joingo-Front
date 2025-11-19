@@ -1,0 +1,29 @@
+mutation CreateUser($displayName: String!, $email: String!) @auth(level: USER) {
+  user_insert(data: {displayName: $displayName, email: $email, createdAt_expr: "request.time"})
+}
+
+query GetMeeting($id: UUID!) @auth(level: USER) {
+  meeting(id: $id) {
+    id
+    title
+    startTime
+    endTime
+    description
+    meetingId
+  }
+}
+
+mutation JoinMeeting($meetingId: UUID!, $role: String!) @auth(level: USER) {
+  participant_insert(data: {meetingId: $meetingId, userId_expr: "auth.uid", joinedAt_expr: "request.time", role: $role})
+}
+
+query ListMeetings @auth(level: USER) {
+  meetings {
+    id
+    title
+    startTime
+    endTime
+    description
+    meetingId
+  }
+}

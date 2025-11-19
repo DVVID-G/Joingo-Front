@@ -1,0 +1,15 @@
+{
+  "emulators": {
+    "dataconnect": {
+      "dataDir": "dataconnect/.dataconnect/pgliteData"
+    }
+  },
+  "dataconnect": {
+    "source": "dataconnect"
+  },
+  "hosting": {
+    "site": "plataforma-de-v-llamadas-db16e",
+    "public": "public"
+  }
+
+}
