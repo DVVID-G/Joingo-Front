@@ -12,15 +12,15 @@ import type { CollectionReference, Timestamp } from "firebase/firestore";
 import { db } from "../lib/firebase.config";
 
 export interface User {
-  uid: string; 
-  displayName?: string | null;
-  email?: string | null;
-  photoURL?: string | null;
-  createdAt?: Timestamp | null;
-  updatedAt?: Timestamp | null;
+    displayName?: string | null;
+    email?: string | null;
+    photoURL?: string | null;
+    createdAt?: Timestamp | null;
+    updatedAt?: Timestamp | null;
 }
 
 export type UserCreate = Omit<User, "createdAt" | "updatedAt">;
+
 export type UserUpdate = Partial<Omit<User, "createdAt">>;
 
 class UserDAO {

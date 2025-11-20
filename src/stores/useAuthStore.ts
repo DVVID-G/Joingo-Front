@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { auth, googleProvider } from '../lib/firebase.config';
+import UserDAO from "../daos/UserDAO";
 
 export interface User {
     uid: string;
@@ -18,6 +19,7 @@ type AuthStore = {
 };
 
 const useAuthStore = create<AuthStore>((set) => ({
+
     user: null,
 
     setUser: (user) => set({ user }),
@@ -25,15 +27,26 @@ const useAuthStore = create<AuthStore>((set) => ({
     initAuthObserver: () => {
         const unsubscribe = onAuthStateChanged(
             auth,
-            (fbUser) => {
+            async (fbUser) => {
                 if (fbUser) {
+
                     const userLogged: User = {
                         uid: fbUser.uid,
                         displayName: fbUser.displayName,
                         email: fbUser.email,
                         photoURL: fbUser.photoURL,
                     };
+
+                    // Guardar en Zustand
                     set({ user: userLogged });
+
+                    // 🔥 Crear/actualizar usuario en Firestore
+                    await UserDAO.createUser({
+                        uid: fbUser.uid,
+                        displayName: fbUser.displayName,
+                        email: fbUser.email,
+                        photoURL: fbUser.photoURL,
+                    });
                 } else {
                     set({ user: null });
                 }
@@ -59,6 +72,7 @@ const useAuthStore = create<AuthStore>((set) => ({
             console.error(e);
         }
     },
+
 }));
 
 export default useAuthStore;
