@@ -14,6 +14,7 @@ const ScheduleMeeting: React.FC = () => {
     startTime: "",
     endTime: "",
     duration: "",
+    
   });
 
   const [participants, setParticipants] = useState<string[]>([]);
@@ -25,6 +26,7 @@ const ScheduleMeeting: React.FC = () => {
     privateRoom: true,
     chat: true,
     requirePassword: false,
+    recording: false,
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
