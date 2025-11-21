@@ -5,13 +5,13 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBV4088RKSvup-cUjxN9PRAsyvMk9AXJbg",
-  authDomain: "plataforma-de-v-llamadas.firebaseapp.com",
-  projectId: "plataforma-de-v-llamadas",
-  storageBucket: "plataforma-de-v-llamadas.firebasestorage.app",
-  messagingSenderId: "729141166368",
-  appId: "1:729141166368:web:4c09bf8116e68c80071745",
-  measurementId: "G-4RP9TV4F8M"
+  apiKey: "AIzaSyD7qwKi9WvLs3aaD_Lgsib3uc98v_dw5OU",
+  authDomain: "meethub-551a1.firebaseapp.com",
+  projectId: "meethub-551a1",
+  storageBucket: "meethub-551a1.firebasestorage.app",
+  messagingSenderId: "682584473718",
+  appId: "1:682584473718:web:674e915a81f6d52d61df57",
+  measurementId: "G-EYLNPLMBJE"
 };
 
 // Initialize Firebase
