@@ -89,10 +89,9 @@ const Support: React.FC = () => {
           <div className="faq-grid">
             <div className="faq-card">
               <div className="faq-icon">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#155DFC" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                <svg width="42" height="42" viewBox="0 0 100 100" fill="none" stroke="#155DFC" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="50" cy="50" r="48"></circle>
+                  <text x="50" y="60" textAnchor="middle" fontSize="60" fontWeight="bold" fill="#155DFC" fontFamily="Arial">?</text>
                 </svg>
               </div>
               <h4 className="faq-question">¿Cómo creo una reunión?</h4>
@@ -103,10 +102,9 @@ const Support: React.FC = () => {
 
             <div className="faq-card">
               <div className="faq-icon">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#155DFC" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                <svg width="42" height="42" viewBox="0 0 100 100" fill="none" stroke="#155DFC" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="50" cy="50" r="48"></circle>
+                  <text x="50" y="60" textAnchor="middle" fontSize="60" fontWeight="bold" fill="#155DFC" fontFamily="Arial">?</text>
                 </svg>
               </div>
               <h4 className="faq-question">¿Cuántos participantes puedo tener?</h4>
@@ -117,10 +115,9 @@ const Support: React.FC = () => {
 
             <div className="faq-card">
               <div className="faq-icon">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#155DFC" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                <svg width="42" height="42" viewBox="0 0 100 100" fill="none" stroke="#155DFC" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="50" cy="50" r="48"></circle>
+                  <text x="50" y="60" textAnchor="middle" fontSize="60" fontWeight="bold" fill="#155DFC" fontFamily="Arial">?</text>
                 </svg>
               </div>
               <h4 className="faq-question">¿Puedo grabar mis reuniones?</h4>
@@ -131,10 +128,9 @@ const Support: React.FC = () => {
 
             <div className="faq-card">
               <div className="faq-icon">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#155DFC" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                <svg width="42" height="42" viewBox="0 0 100 100" fill="none" stroke="#155DFC" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="50" cy="50" r="48"></circle>
+                  <text x="50" y="60" textAnchor="middle" fontSize="60" fontWeight="bold" fill="#155DFC" fontFamily="Arial">?</text>
                 </svg>
               </div>
               <h4 className="faq-question">¿Es segura mi información?</h4>
@@ -145,10 +141,9 @@ const Support: React.FC = () => {
 
             <div className="faq-card">
               <div className="faq-icon">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#155DFC" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                <svg width="42" height="42" viewBox="0 0 100 100" fill="none" stroke="#155DFC" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="50" cy="50" r="48"></circle>
+                  <text x="50" y="60" textAnchor="middle" fontSize="60" fontWeight="bold" fill="#155DFC" fontFamily="Arial">?</text>
                 </svg>
               </div>
               <h4 className="faq-question">¿Funciona en móviles?</h4>
@@ -159,10 +154,9 @@ const Support: React.FC = () => {
 
             <div className="faq-card">
               <div className="faq-icon">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#155DFC" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                <svg width="42" height="42" viewBox="0 0 100 100" fill="none" stroke="#155DFC" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="50" cy="50" r="48"></circle>
+                  <text x="50" y="60" textAnchor="middle" fontSize="60" fontWeight="bold" fill="#155DFC" fontFamily="Arial">?</text>
                 </svg>
               </div>
               <h4 className="faq-question">¿Cómo cancelo mi suscripción?</h4>
