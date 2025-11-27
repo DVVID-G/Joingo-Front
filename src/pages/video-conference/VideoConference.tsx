@@ -79,7 +79,7 @@ const VideoConference: React.FC = () => {
    * Ends the current call and returns to dashboard
    */
   const handleEndCall = () => {
-    navigate("/dashboard");
+    navigate(-1);
   };
 
   return (

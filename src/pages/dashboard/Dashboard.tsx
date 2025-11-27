@@ -4,63 +4,53 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import useMeetingStore from "../../stores/useMeetingStore";
 
-/**
- * Dashboard Component
- *
- * Main application hub that provides users with:
- * - Quick access to create new meetings
- * - List of upcoming scheduled meetings with actions
- * - Quick action shortcuts (schedule meeting, join meeting)
- * - Recent meetings history
- * - User profile menu with logout option
- * - Navigation to all key application features
- *
- * @component
- * @returns {JSX.Element} The main dashboard with meeting management interface
- *
- * @example
- * ```tsx
- * <Dashboard />
- * ```
- *
- * @remarks
- * - Displays up to 10 upcoming meetings
- * - Supports meeting editing and deletion with confirmation
- * - Includes responsive header with navigation links
- * - User profile dropdown for account actions
- *
- * @see useAuthStore - For authentication and logout functionality
- * @see useMeetingStore - For meeting data management
- */
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { logout } = useAuthStore();
+  const { user } = useAuthStore() as any;
   const { getUpcomingMeetings, removeMeeting } = useMeetingStore();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
   const upcomingMeetings = getUpcomingMeetings();
 
-  /**
-   * Handles meeting deletion with user confirmation
-   * @param {string} id - The unique identifier of the meeting to delete
-   * @param {string} meetingName - The name of the meeting for confirmation message
-   */
   const handleDeleteMeeting = (id: string, meetingName: string) => {
     if (window.confirm(`¿Estás seguro de eliminar la reunión "${meetingName}"?`)) {
       removeMeeting(id);
     }
   };
 
-  /**
-   * Handles user logout and redirects to login page
-   */
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
   return (
+    <>
+
+    {/*----------------MODAL--------------*/}
+
+      {showLogoutModal && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h3>¿Cerrar sesión?</h3>
+            <p>Tu sesión se cerrará y deberás volver a iniciar sesión.</p>
+
+            <div className="modal-actions">
+              <button className="modal-cancel" onClick={() => setShowLogoutModal(false)}>
+                Cancelar
+              </button>
+              <button className="modal-logout" onClick={handleLogout}>
+                Sí, cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+
     <div className="dashboard-container">
 
       {/* NAVBAR / HEADER */}
@@ -79,8 +69,8 @@ const Dashboard: React.FC = () => {
         <div className="header-right">
           <div className="profile-section">
             <img
-              src="/assets/images/profile-icon.png"
-              alt="Profile"
+              src={user?.photoURL || "/assets/images/profile-icon.png"}
+              alt={user?.displayName || "Perfil"}
               className="profile-icon"
               onClick={() => setMenuOpen(!menuOpen)}
             />
@@ -89,14 +79,15 @@ const Dashboard: React.FC = () => {
               <div className="profile-dropdown">
                 <button onClick={() => navigate("/profile")}>Perfil</button>
                 <button onClick={() => navigate("/settings")}>Configuración</button>
-                <button onClick={handleLogout}>Cerrar sesión</button>
+                <button onClick={() => setShowLogoutModal(true)}>Cerrar sesión</button>
+
               </div>
             )}
           </div>
         </div>
       </header>
 
-      {/* DASHBOARD CONTENT */}
+      {/* CONTENIDO DEL DASHBOARD */}
       <main className="dashboard-content">
         <div className="left-content">
             <div className="principal-containers">
@@ -140,16 +131,6 @@ const Dashboard: React.FC = () => {
                         >
                           <img src="assets/images/play.svg" alt="Unirse"></img>
                         </div>
-                        <button
-                          className="edit-meeting-btn"
-                          onClick={() => navigate(`/edit-meeting/${meeting.id}`)}
-                          title="Editar reunión"
-                        >
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                          </svg>
-                        </button>
                         <button
                           className="delete-meeting-btn"
                           onClick={() => handleDeleteMeeting(meeting.id, meeting.meetingName)}
@@ -212,6 +193,7 @@ const Dashboard: React.FC = () => {
             
       </main>
     </div>
+   </>
   );
 };
 
