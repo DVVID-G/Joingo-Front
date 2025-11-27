@@ -3,6 +3,34 @@ import "./ScheduleMeeting.css";
 import { useNavigate } from "react-router-dom";
 import useMeetingStore from "../../stores/useMeetingStore";
 
+/**
+ * ScheduleMeeting Component
+ *
+ * Provides interface for creating new scheduled video meetings with:
+ * - Meeting name and description
+ * - Date and time selection (with AM/PM format)
+ * - Participant email list management
+ * - Meeting settings configuration
+ * - Form validation and error handling
+ * - Responsive design for mobile and desktop
+ *
+ * @component
+ * @returns {JSX.Element} The meeting scheduling form
+ *
+ * @example
+ * ```tsx
+ * <ScheduleMeeting />
+ * ```
+ *
+ * @remarks
+ * - Validates meeting name, date, and time
+ * - Prevents scheduling meetings in the past
+ * - Ensures end time is after start time
+ * - Supports adding/removing multiple participants
+ * - Stores meeting data in meeting store on submission
+ *
+ * @see useMeetingStore - For meeting data persistence
+ */
 const ScheduleMeeting: React.FC = () => {
   const navigate = useNavigate();
   const { addMeeting } = useMeetingStore();
@@ -24,6 +52,10 @@ const ScheduleMeeting: React.FC = () => {
     requirePassword: false,
   });
 
+  /**
+   * Adds a participant email to the meeting
+   * Validates that email is not empty and not already added
+   */
   const handleAddParticipant = () => {
     if (participantEmail && !participants.includes(participantEmail)) {
       setParticipants([...participants, participantEmail]);
@@ -31,25 +63,29 @@ const ScheduleMeeting: React.FC = () => {
     }
   };
 
+  /**
+   * Removes a participant email from the meeting
+   * @param email - The email address to remove
+   */
   const handleRemoveParticipant = (email: string) => {
     setParticipants(participants.filter((p) => p !== email));
   };
 
   const convertTo24h = (h: string): string => {
     const hour = parseInt(h);
-    // h es 1-12, convertir a 0-23
-    if (hour === 12) return "00"; // 12 AM es 00:xx
+    // h is 1-12, convert to 0-23
+    if (hour === 12) return "00"; // 12 AM is 00:xx
     return String(hour).padStart(2, '0');
   };
 
   const convertTo24hPM = (h: string): string => {
     const hour = parseInt(h);
-    // h es 1-12 PM, convertir a 12-23 (formato 24h)
-    if (hour === 12) return "12"; // 12 PM es 12:xx
+    // h is 1-12 PM, convert to 12-23 (24h format)
+    if (hour === 12) return "12"; // 12 PM is 12:xx
     return String(hour + 12).padStart(2, '0');
   };
 
-  // Generar opciones de tiempo con AM/PM incluido
+  // Generate time options with AM/PM included
   const generateTimeOptions = () => {
     const options = [];
     for (let h = 1; h <= 12; h++) {
@@ -100,15 +136,15 @@ const ScheduleMeeting: React.FC = () => {
     }
 
     if (!endTime) {
-      setError("Por favor selecciona la hora de fin");
+      setError("Por favor selecciona la hora de cierre");
       return;
     }
 
-    // Validar fecha y hora
+    // Validate date and time
     const now = new Date();
     const currentDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
 
-    // Parsear times
+    // Parse times
     const [startH, startM, startPeriod] = startTime.split('-');
     const [endH, endM, endPeriod] = endTime.split('-');
 
@@ -118,20 +154,20 @@ const ScheduleMeeting: React.FC = () => {
     const startTimeStr = `${startHour24}:${String(startM).padStart(2, '0')}`;
     const endTimeStr = `${endHour24}:${String(endM).padStart(2, '0')}`;
 
-    // La fecha del input type="date" ya viene en formato YYYY-MM-DD
+    // The date from input type="date" already comes in YYYY-MM-DD format
     const dateFormatted = date;
 
     const startDateTime = new Date(`${dateFormatted}T${startTimeStr}`);
     const endDateTime = new Date(`${dateFormatted}T${endTimeStr}`);
 
-    // Detectar errores
-    // Comparar fechas en formato YYYY-MM-DD
+    // Detect errors
+    // Compare dates in YYYY-MM-DD format
     const isDatePast = dateFormatted.localeCompare(currentDate) < 0;
     const isStartTimeInvalid = startDateTime < now;
     const isEndTimeInvalid = endDateTime < now;
     const isEndBeforeStart = endTimeStr <= startTimeStr;
 
-    // Mostrar el error apropiado según los casos
+    // Show appropriate error based on cases
     if (isDatePast && (isStartTimeInvalid || isEndTimeInvalid)) {
       setError("Fecha y hora inválidas");
       return;
@@ -222,7 +258,7 @@ const ScheduleMeeting: React.FC = () => {
               className="time-select"
               style={{ width: '100%' }}
             >
-              <option value="">Selecciona hora</option>
+              <option value="">Seleccionar hora</option>
               {generateTimeOptions().map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -232,14 +268,14 @@ const ScheduleMeeting: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label>Hora de fin *</label>
+            <label>Hora de cierre *</label>
             <select
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
               className="time-select"
               style={{ width: '100%' }}
             >
-              <option value="">Selecciona hora</option>
+              <option value="">Seleccionar hora</option>
               {generateTimeOptions().map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -254,7 +290,7 @@ const ScheduleMeeting: React.FC = () => {
             </div>
           )}
 
-          {/* Participantes */}
+          {/* Participants */}
           <div className="participants-section">
             <h3 className="section-title">Invitar participantes</h3>
             <div className="participants-input">
@@ -266,7 +302,7 @@ const ScheduleMeeting: React.FC = () => {
                 onKeyPress={(e) => e.key === "Enter" && handleAddParticipant()}
               />
               <button type="button" className="add-button" onClick={handleAddParticipant}>
-                Añadir
+                Agregar
               </button>
             </div>
             {participants.length > 0 && (

@@ -3,6 +3,40 @@ import "./VideoConference.css";
 import { useNavigate, useParams } from "react-router-dom";
 import useMeetingStore from "../../stores/useMeetingStore";
 
+/**
+ * VideoConference Component
+ *
+ * Main video conferencing interface providing:
+ * - Main video display area for the primary speaker
+ * - Participant grid showing connected users
+ * - Real-time chat functionality
+ * - Participant list panel
+ * - Full control bar with audio/video/screen share controls
+ * - Meeting timer
+ * - Call end functionality
+ *
+ * @component
+ * @param meetingId - URL parameter containing the meeting identifier
+ * @returns {JSX.Element} The video conference interface
+ *
+ * @example
+ * ```tsx
+ * <VideoConference /> // Route: /conference/:meetingId
+ * ```
+ *
+ * @remarks
+ * - Displays main video feed with participant name overlay
+ * - Shows up to 3 additional participants in a grid
+ * - Supports muting/unmuting microphone
+ * - Allows toggling camera on/off
+ * - Provides screen sharing option
+ * - Real-time chat messaging with timestamp
+ * - Participant roster with live count
+ * - Responsive layout for different screen sizes
+ * - End call button returns to dashboard
+ *
+ * @see useMeetingStore - For meeting data retrieval
+ */
 const VideoConference: React.FC = () => {
   const navigate = useNavigate();
   const { meetingId } = useParams();
@@ -23,19 +57,27 @@ const VideoConference: React.FC = () => {
     { id: 3, name: "Usuario 2" },
   ]);
 
+  /**
+   * Sends a chat message in the conference
+   * Adds message to chat history with timestamp
+   * Clears input field after sending
+   */
   const handleSendMessage = () => {
     if (message.trim()) {
       const newMessage = {
         id: messages.length + 1,
-        user: "Tú",
+        user: "You",
         text: message,
-        time: new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" }),
+        time: new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
       };
       setMessages([...messages, newMessage]);
       setMessage("");
     }
   };
 
+  /**
+   * Ends the current call and returns to dashboard
+   */
   const handleEndCall = () => {
     navigate("/dashboard");
   };
@@ -181,7 +223,7 @@ const VideoConference: React.FC = () => {
           <button
             className={`control-btn ${isVideoOff ? "active" : ""}`}
             onClick={() => setIsVideoOff(!isVideoOff)}
-            title={isVideoOff ? "Activar cámara" : "Desactivar cámara"}
+            title={isVideoOff ? "Activar cámara" : "Detener video"}
           >
             {isVideoOff ? (
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -228,10 +270,10 @@ const VideoConference: React.FC = () => {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
-            <span>Chat</span>
+            <span>Mensaje</span>
           </button>
 
-          <button className="control-btn btn-end-call" onClick={handleEndCall} title="Finalizar llamada">
+          <button className="control-btn btn-end-call" onClick={handleEndCall} title="Terminar llamada">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M23 1L1 23M1 1l22 22"></path>
             </svg>

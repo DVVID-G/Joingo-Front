@@ -1,4 +1,4 @@
-/* CONTENEDOR PRINCIPAL */
+/* MAIN CONTAINER */
 .dashboard-container {
   height: 100vh;
   background: #f6f7fb;
@@ -36,7 +36,7 @@
   margin: 0;
 }
 
-/* NAV LINKS */
+/* NAVIGATION LINKS */
 .nav-links {
   display: flex;
   gap: 25px;
@@ -54,7 +54,7 @@
   color: #155DFC;
 }
 
-/* PERFIL */
+/* PROFILE */
 .header-right {
   display: flex;
   align-items: center;
@@ -72,7 +72,7 @@
   background: #ddd;
 }
 
-/* DROPDOWN PERFIL */
+/* PROFILE DROPDOWN */
 .profile-dropdown {
   position: absolute;
   right: 0;
@@ -103,12 +103,12 @@
   background: #f3f4f6;
 }
 
-/* CONTENIDO */
+/* CONTENT */
 .dashboard-content {
   padding: 30px;
   display: grid;
-  grid-template-columns: 60% 40%; /* ⭐ la derecha tendrá más espacio útil */
-  gap: 30px; /* separación entre columnas */
+  grid-template-columns: 60% 40%; /* Right side will have more useful space */
+  gap: 30px; /* separation between columns */
 }
 
 /* make main content fill remaining height so inner grids can distribute rows */
@@ -119,36 +119,36 @@
 
 .principal-containers {
     display: flex;
-    flex-direction: row;           /* ⬅️ convierte el contenedor en 2 columnas */
-    justify-content: space-between;/* separa texto a la izq + imagen a la der */
-    align-items: center;           /* centra verticalmente */
+    flex-direction: row;           /* Converts the container into 2 columns */
+    justify-content: space-between;/* Separates text on left + image on right */
+    align-items: center;           /* Centers vertically */
   padding: 24px;
     border-radius: 24px;
     background: linear-gradient(135deg, #155DFC 0%, #2B7FFF 50%, #00D3F2 100%);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    gap: 24px;                  /* separación interna */
+    gap: 24px;                  /* Internal separation */
   box-sizing: border-box;
 
 }
 
-/*left zone*/
+/* Left zone */
 .left-content {
   display: grid;
-  grid-template-rows: repeat(2, 1fr); /* dos filas iguales: top y bottom */
+  grid-template-rows: repeat(2, 1fr); /* Two equal rows: top and bottom */
   gap: 24px;
   min-height: 0; /* important for child 100% heights in a flex column */
 }
-/* RIGHT: centra sus elementos horizontalmente dentro de su columna */
+/* RIGHT: centers its elements horizontally within its column */
 .right-content {
   display: grid;
-  grid-template-rows: repeat(2, 1fr); /* dos filas iguales para alinear con la izquierda */
+  grid-template-rows: repeat(2, 1fr); /* Two equal rows to align with the left */
   gap: 24px;
-  align-items: stretch; /* que las tarjetas ocupen el ancho completo */
+  align-items: stretch; /* Cards occupy the full width */
   padding-top: 0; /* remove vertical offset so top edges align */
   min-height: 0;
 }
 
-/* TARJETAS DERECHA: ocupan el ancho de la columna pero con un max para no verse gigantes */
+/* RIGHT CARDS: occupy the column width but with a max so they don't look huge */
 .secundary-container {
   display: flex;
   padding: 24px;
@@ -157,7 +157,7 @@
   border-radius: 24px;
   background: linear-gradient(135deg, #155DFC 0%, #2B7FFF 50%, #00D3F2 100%);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.10), 0 8px 10px -6px rgba(0, 0, 0, 0.10);
-  margin: 0;      /* no centrar: ocuparán el ancho de la columna */
+  margin: 0;      /* Don't center: they will occupy the column width */
   box-sizing: border-box;
   align-self: stretch; /* asegurar que rellenen su fila de grid */
   width: 100%;
@@ -170,7 +170,7 @@
 }
 
 /* Remove fixed heights elsewhere and allow grid rows to control sizing */
-/*Container content*/
+/* Container content */
 .container-title{
     color:white;
     font-size: 30px;
@@ -306,8 +306,8 @@
 .meetings-block {
   flex-direction: column;
   align-items: flex-start; /* para que el h2 quede arriba a la izquierda */
-  height: auto;           /* que crezca según el contenido */
-  gap: 20px;              /* que haya espacio entre h2 y meets */
+  height: auto;           /* Grows according to content */
+  gap: 20px;              /* Space between h2 and meets */
 }
 .no-meetings {
   width: 100%;
@@ -316,12 +316,12 @@
   color: rgba(255, 255, 255, 0.8);
   font-size: 16px;
 }
-/*Meeting title and text*/
+/* Meeting title and text */
 .meeting-title,.meeting-text{
     color:white;
     font-size: 20px;
 }
-/*Right containers*/
+/* Right containers */
 .container-actions {
     display: flex;
     align-items: center;
@@ -329,17 +329,17 @@
     padding: 0px;
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.20);
-    height: auto; /* ⬅️ evita que se rompa */
+    height: auto; /* Prevents breaking */
 }
-/*secundary-title*/
+/* Secondary title */
 .secundary-title{
     font-size: 30px;
 }
-/*Actions containers*/
+/* Actions containers */
 .action {
     display: flex;
     align-items: center;
-    gap: 12px;             /* Separación entre icono y texto */
+    gap: 12px;             /* Separation between icon and text */
     padding: 12px;
 }
 .actions-content {
@@ -354,7 +354,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-shrink: 0;         /* evita que el ícono se achique */
+    flex-shrink: 0;         /* Prevents the icon from shrinking */
 }
 
 /* ------------------ RESPONSIVE ------------------ */
@@ -369,7 +369,7 @@
     align-items: stretch;
   }
 
-  /* make left and right content flow naturally with auto rows */
+  /* Make left and right content flow naturally with auto rows */
   .left-content,
   .right-content {
     /* make these simple block containers so children flow naturally */
@@ -378,7 +378,7 @@
     gap: 18px;
   }
 
-  /* ensure cards occupy full width and similar paddings */
+  /* Ensure cards occupy full width and similar paddings */
   .principal-containers,
   .secundary-container {
     width: 100%;
@@ -432,7 +432,7 @@
     transform: none !important;
   }
 
-  /* ensure cards are not positioned and will occupy normal flow */
+  /* Ensure cards are not positioned and will occupy normal flow */
   .principal-containers,
   .secundary-container {
     position: static !important;
@@ -498,7 +498,7 @@
     box-sizing: border-box;
   }
 
-  /* Flatten left/right containers so children flow strictly in DOM order
+  /* Flatten left/right containers so children flow strictly in DOM order.
      This prevents any remaining interleaving/overlap on very small screens. */
   .left-content,
   .right-content {
@@ -549,7 +549,7 @@
   }
 }
 
-/* RESPONSIVE - Altura reducida (Pantallas cortas) */
+/* RESPONSIVE - Reduced height (Short screens) */
 @media (max-height: 800px) {
   .dashboard-content {
     padding: 16px;

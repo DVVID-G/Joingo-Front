@@ -1,4 +1,4 @@
-/* CONTENEDOR PRINCIPAL */
+/* MAIN CONTAINER */
 .about-container {
   min-height: 100vh;
   background: #f6f7fb;
@@ -45,7 +45,7 @@
   margin: 0;
 }
 
-/* CONTENIDO PRINCIPAL */
+/* MAIN CONTENT */
 .about-content {
   flex: 1;
   padding: 60px 40px 40px;
@@ -54,7 +54,7 @@
   width: 100%;
 }
 
-/* INTRO */
+/* INTRODUCTION */
 .about-intro {
   text-align: center;
   margin-bottom: 60px;
@@ -75,7 +75,7 @@
   line-height: 1.6;
 }
 
-/* MISIÓN Y VISIÓN */
+/* MISSION AND VISION */
 .mission-vision-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -123,7 +123,7 @@
   opacity: 0.95;
 }
 
-/* ESTADÍSTICAS */
+/* STATISTICS */
 .stats-section {
   margin-bottom: 70px;
 }
@@ -173,7 +173,7 @@
   margin: 0;
 }
 
-/* VALORES */
+/* VALUES */
 .values-section {
   margin-bottom: 70px;
 }
@@ -221,7 +221,7 @@
   margin: 0;
 }
 
-/* HISTORIA */
+/* HISTORY */
 .history-section {
   margin-bottom: 70px;
 }
@@ -672,7 +672,7 @@
   }
 }
 
-/* RESPONSIVE - Altura reducida (Pantallas cortas) */
+/* RESPONSIVE - Reduced height (Short screens) */
 @media (max-height: 800px) {
   .about-container {
     min-height: auto;

@@ -1,4 +1,4 @@
-/* CONTENEDOR PRINCIPAL */
+/* MAIN CONTAINER */
 .support-container {
   min-height: 100vh;
   background: #f6f7fb;
@@ -45,7 +45,7 @@
   margin: 0;
 }
 
-/* CONTENIDO PRINCIPAL */
+/* MAIN CONTENT */
 .support-content {
   flex: 1;
   padding: 60px 40px 40px;
@@ -54,7 +54,7 @@
   width: 100%;
 }
 
-/* INTRO */
+/* INTRODUCTION */
 .support-intro {
   text-align: center;
   margin-bottom: 60px;
@@ -75,7 +75,7 @@
   line-height: 1.6;
 }
 
-/* OPCIONES DE CONTACTO */
+/* CONTACT OPTIONS */
 .contact-options {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -141,7 +141,7 @@
   margin: 0;
 }
 
-/* PREGUNTAS FRECUENTES */
+/* FREQUENTLY ASKED QUESTIONS */
 .faq-section {
   margin-bottom: 70px;
 }
@@ -201,7 +201,7 @@
   margin: 0;
 }
 
-/* FORMULARIO DE CONTACTO */
+/* CONTACT FORM */
 .contact-form-section {
   margin-bottom: 70px;
 }
@@ -291,7 +291,7 @@
   box-shadow: 0 8px 25px rgba(21, 93, 252, 0.4);
 }
 
-/* RECURSOS ADICIONALES */
+/* ADDITIONAL RESOURCES */
 .resources-section {
   margin-bottom: 70px;
 }
@@ -770,7 +770,7 @@
   }
 }
 
-/* RESPONSIVE - Altura reducida (Pantallas cortas) */
+/* RESPONSIVE - Reduced height (Short screens) */
 @media (max-height: 800px) {
   .support-container {
     min-height: auto;

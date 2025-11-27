@@ -4,6 +4,34 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import useMeetingStore from "../../stores/useMeetingStore";
 
+/**
+ * Dashboard Component
+ *
+ * Main application hub that provides users with:
+ * - Quick access to create new meetings
+ * - List of upcoming scheduled meetings with actions
+ * - Quick action shortcuts (schedule meeting, join meeting)
+ * - Recent meetings history
+ * - User profile menu with logout option
+ * - Navigation to all key application features
+ *
+ * @component
+ * @returns {JSX.Element} The main dashboard with meeting management interface
+ *
+ * @example
+ * ```tsx
+ * <Dashboard />
+ * ```
+ *
+ * @remarks
+ * - Displays up to 10 upcoming meetings
+ * - Supports meeting editing and deletion with confirmation
+ * - Includes responsive header with navigation links
+ * - User profile dropdown for account actions
+ *
+ * @see useAuthStore - For authentication and logout functionality
+ * @see useMeetingStore - For meeting data management
+ */
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { logout } = useAuthStore();
@@ -13,12 +41,20 @@ const Dashboard: React.FC = () => {
 
   const upcomingMeetings = getUpcomingMeetings();
 
+  /**
+   * Handles meeting deletion with user confirmation
+   * @param {string} id - The unique identifier of the meeting to delete
+   * @param {string} meetingName - The name of the meeting for confirmation message
+   */
   const handleDeleteMeeting = (id: string, meetingName: string) => {
     if (window.confirm(`¿Estás seguro de eliminar la reunión "${meetingName}"?`)) {
       removeMeeting(id);
     }
   };
 
+  /**
+   * Handles user logout and redirects to login page
+   */
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -44,7 +80,7 @@ const Dashboard: React.FC = () => {
           <div className="profile-section">
             <img
               src="/assets/images/profile-icon.png"
-              alt="Perfil"
+              alt="Profile"
               className="profile-icon"
               onClick={() => setMenuOpen(!menuOpen)}
             />
@@ -60,7 +96,7 @@ const Dashboard: React.FC = () => {
         </div>
       </header>
 
-      {/* CONTENIDO DEL DASHBOARD */}
+      {/* DASHBOARD CONTENT */}
       <main className="dashboard-content">
         <div className="left-content">
             <div className="principal-containers">

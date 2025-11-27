@@ -3,6 +3,35 @@ import "../schedule-meeting/ScheduleMeeting.css";
 import { useNavigate, useParams } from "react-router-dom";
 import useMeetingStore from "../../stores/useMeetingStore";
 
+/**
+ * EditMeeting Component
+ *
+ * Allows users to edit existing scheduled video meetings with:
+ * - Meeting name modification
+ * - Date and time updates (with AM/PM format)
+ * - Participant list management
+ * - Meeting settings configuration
+ * - Form validation and error handling
+ * - Responsive design for mobile and desktop
+ *
+ * @component
+ * @param meetingId - URL parameter containing the unique meeting identifier
+ * @returns {JSX.Element} The meeting editing form
+ *
+ * @example
+ * ```tsx
+ * <EditMeeting /> // Route: /edit-meeting/:meetingId
+ * ```
+ *
+ * @remarks
+ * - Loads existing meeting data on component mount
+ * - Converts 24-hour time format to 12-hour AM/PM display
+ * - Validates meeting details before saving
+ * - Prevents scheduling in the past or with invalid times
+ * - Redirects to dashboard if meeting not found
+ *
+ * @see useMeetingStore - For meeting data retrieval and updates
+ */
 const EditMeeting: React.FC = () => {
   const navigate = useNavigate();
   const { meetingId } = useParams<{ meetingId: string }>();
@@ -25,7 +54,11 @@ const EditMeeting: React.FC = () => {
     requirePassword: false,
   });
 
-  // Cargar datos de la reunión al montar el componente
+  /**
+   * Loads meeting data from store on component mount
+   * Converts stored 24-hour times to 12-hour AM/PM format for display
+   * Redirects to dashboard if meeting ID is invalid or not found
+   */
   useEffect(() => {
     if (!meetingId) {
       navigate("/dashboard");
@@ -42,14 +75,14 @@ const EditMeeting: React.FC = () => {
     setDate(meeting.date);
     setParticipants(meeting.participants);
 
-    // Convertir el startTime de 24h a formato con opciones (h-m-AM/PM)
+    // Convert startTime from 24h to format with options (h-m-AM/PM)
     const [startHour, startMinute] = meeting.startTime.split(':');
     const startHourNum = parseInt(startHour);
     const isPMStart = startHourNum >= 12;
     const display12HourStart = startHourNum === 0 ? 12 : startHourNum > 12 ? startHourNum - 12 : startHourNum;
     setStartTime(`${display12HourStart}-${startMinute}-${isPMStart ? 'PM' : 'AM'}`);
 
-    // Convertir el endTime de 24h a formato con opciones (h-m-AM/PM)
+    // Convert endTime from 24h to format with options (h-m-AM/PM)
     const [endHour, endMinute] = meeting.endTime.split(':');
     const endHourNum = parseInt(endHour);
     const isPMEnd = endHourNum >= 12;
@@ -130,15 +163,15 @@ const EditMeeting: React.FC = () => {
     }
 
     if (!endTime) {
-      setError("Por favor selecciona la hora de fin");
+      setError("Por favor selecciona la hora de cierre");
       return;
     }
 
-    // Validar fecha y hora
+    // Validate date and time
     const now = new Date();
     const currentDate = now.toISOString().split('T')[0];
 
-    // Parsear times
+    // Parse times
     const [startH, startM, startPeriod] = startTime.split('-');
     const [endH, endM, endPeriod] = endTime.split('-');
 
@@ -153,13 +186,13 @@ const EditMeeting: React.FC = () => {
     const startDateTime = new Date(`${dateFormatted}T${startTimeStr}`);
     const endDateTime = new Date(`${dateFormatted}T${endTimeStr}`);
 
-    // Detectar errores
+    // Detect errors
     const isDatePast = dateFormatted.localeCompare(currentDate) < 0;
     const isStartTimeInvalid = startDateTime < now;
     const isEndTimeInvalid = endDateTime < now;
     const isEndBeforeStart = endTimeStr <= startTimeStr;
 
-    // Mostrar el error apropiado según los casos
+    // Show appropriate error based on cases
     if (isDatePast && (isStartTimeInvalid || isEndTimeInvalid)) {
       setError("Fecha y hora inválidas");
       return;
@@ -248,7 +281,7 @@ const EditMeeting: React.FC = () => {
               className="time-select"
               style={{ width: '100%' }}
             >
-              <option value="">Selecciona hora</option>
+              <option value="">Seleccionar hora</option>
               {generateTimeOptions().map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -258,14 +291,14 @@ const EditMeeting: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label>Hora de fin *</label>
+            <label>Hora de cierre *</label>
             <select
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
               className="time-select"
               style={{ width: '100%' }}
             >
-              <option value="">Selecciona hora</option>
+              <option value="">Seleccionar hora</option>
               {generateTimeOptions().map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -280,7 +313,7 @@ const EditMeeting: React.FC = () => {
             </div>
           )}
 
-          {/* Participantes */}
+          {/* Participants */}
           <div className="participants-section">
             <h3 className="section-title">Invitar participantes</h3>
             <div className="participants-input">
@@ -292,7 +325,7 @@ const EditMeeting: React.FC = () => {
                 onKeyPress={(e) => e.key === "Enter" && handleAddParticipant()}
               />
               <button type="button" className="add-button" onClick={handleAddParticipant}>
-                Añadir
+                Agregar
               </button>
             </div>
             {participants.length > 0 && (
