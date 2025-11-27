@@ -88,12 +88,7 @@ const Support: React.FC = () => {
           <h2 className="section-title">Preguntas Frecuentes</h2>
           <div className="faq-grid">
             <div className="faq-card">
-              <div className="faq-icon">
-                <svg width="42" height="42" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="50" cy="50" r="48" fill="#155DFC"></circle>
-                  <text x="50" y="65" textAnchor="middle" fontSize="56" fontWeight="bold" fill="white" fontFamily="Arial">?</text>
-                </svg>
-              </div>
+              <div className="faq-icon">?</div>
               <h4 className="faq-question">¿Cómo creo una reunión?</h4>
               <p className="faq-answer">
                 Haz clic en "Nueva reunión" en el dashboard, completa los detalles y comparte el enlace con los participantes.
@@ -101,12 +96,7 @@ const Support: React.FC = () => {
             </div>
 
             <div className="faq-card">
-              <div className="faq-icon">
-                <svg width="42" height="42" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="50" cy="50" r="48" fill="#155DFC"></circle>
-                  <text x="50" y="65" textAnchor="middle" fontSize="56" fontWeight="bold" fill="white" fontFamily="Arial">?</text>
-                </svg>
-              </div>
+              <div className="faq-icon">?</div>
               <h4 className="faq-question">¿Cuántos participantes puedo tener?</h4>
               <p className="faq-answer">
                 Las cuentas gratuitas permiten hasta 100 participantes. Los planes premium ofrecen hasta 1000 participantes.
@@ -114,12 +104,7 @@ const Support: React.FC = () => {
             </div>
 
             <div className="faq-card">
-              <div className="faq-icon">
-                <svg width="42" height="42" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="50" cy="50" r="48" fill="#155DFC"></circle>
-                  <text x="50" y="65" textAnchor="middle" fontSize="56" fontWeight="bold" fill="white" fontFamily="Arial">?</text>
-                </svg>
-              </div>
+              <div className="faq-icon">?</div>
               <h4 className="faq-question">¿Puedo grabar mis reuniones?</h4>
               <p className="faq-answer">
                 Sí, puedes grabar tus reuniones con un solo clic. Las grabaciones se guardan en la nube y están disponibles por 30 días.
@@ -127,12 +112,7 @@ const Support: React.FC = () => {
             </div>
 
             <div className="faq-card">
-              <div className="faq-icon">
-                <svg width="42" height="42" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="50" cy="50" r="48" fill="#155DFC"></circle>
-                  <text x="50" y="65" textAnchor="middle" fontSize="56" fontWeight="bold" fill="white" fontFamily="Arial">?</text>
-                </svg>
-              </div>
+              <div className="faq-icon">?</div>
               <h4 className="faq-question">¿Es segura mi información?</h4>
               <p className="faq-answer">
                 Absolutamente. Usamos encriptación de extremo a extremo y cumplimos con los estándares de seguridad más altos.
@@ -140,12 +120,7 @@ const Support: React.FC = () => {
             </div>
 
             <div className="faq-card">
-              <div className="faq-icon">
-                <svg width="42" height="42" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="50" cy="50" r="48" fill="#155DFC"></circle>
-                  <text x="50" y="65" textAnchor="middle" fontSize="56" fontWeight="bold" fill="white" fontFamily="Arial">?</text>
-                </svg>
-              </div>
+              <div className="faq-icon">?</div>
               <h4 className="faq-question">¿Funciona en móviles?</h4>
               <p className="faq-answer">
                 Sí, JoinGo funciona perfectamente en navegadores móviles y tenemos apps nativas para iOS y Android.
@@ -153,12 +128,7 @@ const Support: React.FC = () => {
             </div>
 
             <div className="faq-card">
-              <div className="faq-icon">
-                <svg width="42" height="42" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="50" cy="50" r="48" fill="#155DFC"></circle>
-                  <text x="50" y="65" textAnchor="middle" fontSize="56" fontWeight="bold" fill="white" fontFamily="Arial">?</text>
-                </svg>
-              </div>
+              <div className="faq-icon">?</div>
               <h4 className="faq-question">¿Cómo cancelo mi suscripción?</h4>
               <p className="faq-answer">
                 Puedes cancelar tu suscripción en cualquier momento desde la configuración de tu cuenta, sin penalizaciones.
