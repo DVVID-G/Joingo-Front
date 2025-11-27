@@ -99,7 +99,7 @@ const Support: React.FC = () => {
               <div className="faq-icon">?</div>
               <h4 className="faq-question">¿Cuántos participantes puedo tener?</h4>
               <p className="faq-answer">
-                Las cuentas gratuitas permiten hasta 100 participantes. Los planes premium ofrecen hasta 1000 participantes.
+                Puedes tener hasta 10 participantes en tus reuniones.
               </p>
             </div>
 
