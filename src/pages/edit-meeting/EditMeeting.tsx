@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import "./ScheduleMeeting.css";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import "../schedule-meeting/ScheduleMeeting.css";
+import { useNavigate, useParams } from "react-router-dom";
 import useMeetingStore from "../../stores/useMeetingStore";
 
-const ScheduleMeeting: React.FC = () => {
+const EditMeeting: React.FC = () => {
   const navigate = useNavigate();
-  const { addMeeting } = useMeetingStore();
+  const { meetingId } = useParams<{ meetingId: string }>();
+  const { getMeetingById, updateMeeting } = useMeetingStore();
 
   const [meetingName, setMeetingName] = useState("");
   const [date, setDate] = useState("");
@@ -24,6 +25,38 @@ const ScheduleMeeting: React.FC = () => {
     requirePassword: false,
   });
 
+  // Cargar datos de la reunión al montar el componente
+  useEffect(() => {
+    if (!meetingId) {
+      navigate("/dashboard");
+      return;
+    }
+
+    const meeting = getMeetingById(meetingId);
+    if (!meeting) {
+      navigate("/dashboard");
+      return;
+    }
+
+    setMeetingName(meeting.meetingName);
+    setDate(meeting.date);
+    setParticipants(meeting.participants);
+
+    // Convertir el startTime de 24h a formato con opciones (h-m-AM/PM)
+    const [startHour, startMinute] = meeting.startTime.split(':');
+    const startHourNum = parseInt(startHour);
+    const isPMStart = startHourNum >= 12;
+    const display12HourStart = startHourNum === 0 ? 12 : startHourNum > 12 ? startHourNum - 12 : startHourNum;
+    setStartTime(`${display12HourStart}-${startMinute}-${isPMStart ? 'PM' : 'AM'}`);
+
+    // Convertir el endTime de 24h a formato con opciones (h-m-AM/PM)
+    const [endHour, endMinute] = meeting.endTime.split(':');
+    const endHourNum = parseInt(endHour);
+    const isPMEnd = endHourNum >= 12;
+    const display12HourEnd = endHourNum === 0 ? 12 : endHourNum > 12 ? endHourNum - 12 : endHourNum;
+    setEndTime(`${display12HourEnd}-${endMinute}-${isPMEnd ? 'PM' : 'AM'}`);
+  }, [meetingId, getMeetingById, navigate]);
+
   const handleAddParticipant = () => {
     if (participantEmail && !participants.includes(participantEmail)) {
       setParticipants([...participants, participantEmail]);
@@ -37,19 +70,16 @@ const ScheduleMeeting: React.FC = () => {
 
   const convertTo24h = (h: string): string => {
     const hour = parseInt(h);
-    // h es 1-12, convertir a 0-23
-    if (hour === 12) return "00"; // 12 AM es 00:xx
+    if (hour === 12) return "00";
     return String(hour).padStart(2, '0');
   };
 
   const convertTo24hPM = (h: string): string => {
     const hour = parseInt(h);
-    // h es 1-12 PM, convertir a 12-23 (formato 24h)
-    if (hour === 12) return "12"; // 12 PM es 12:xx
+    if (hour === 12) return "12";
     return String(hour + 12).padStart(2, '0');
   };
 
-  // Generar opciones de tiempo con AM/PM incluido
   const generateTimeOptions = () => {
     const options = [];
     for (let h = 1; h <= 12; h++) {
@@ -106,7 +136,7 @@ const ScheduleMeeting: React.FC = () => {
 
     // Validar fecha y hora
     const now = new Date();
-    const currentDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
+    const currentDate = now.toISOString().split('T')[0];
 
     // Parsear times
     const [startH, startM, startPeriod] = startTime.split('-');
@@ -118,14 +148,12 @@ const ScheduleMeeting: React.FC = () => {
     const startTimeStr = `${startHour24}:${String(startM).padStart(2, '0')}`;
     const endTimeStr = `${endHour24}:${String(endM).padStart(2, '0')}`;
 
-    // La fecha del input type="date" ya viene en formato YYYY-MM-DD
     const dateFormatted = date;
 
     const startDateTime = new Date(`${dateFormatted}T${startTimeStr}`);
     const endDateTime = new Date(`${dateFormatted}T${endTimeStr}`);
 
     // Detectar errores
-    // Comparar fechas en formato YYYY-MM-DD
     const isDatePast = dateFormatted.localeCompare(currentDate) < 0;
     const isStartTimeInvalid = startDateTime < now;
     const isEndTimeInvalid = endDateTime < now;
@@ -157,7 +185,9 @@ const ScheduleMeeting: React.FC = () => {
       return;
     }
 
-    addMeeting({
+    if (!meetingId) return;
+
+    updateMeeting(meetingId, {
       meetingName: meetingName,
       description: "",
       date: date,
@@ -169,10 +199,6 @@ const ScheduleMeeting: React.FC = () => {
     });
 
     navigate("/dashboard");
-  };
-
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(e.target.value);
   };
 
   const handleCancel = () => {
@@ -193,7 +219,7 @@ const ScheduleMeeting: React.FC = () => {
 
       <main className="schedule-content">
         <div className="schedule-card">
-          <h2 className="schedule-title">Programar Reunión</h2>
+          <h2 className="schedule-title">Editar Reunión</h2>
 
           <div className="form-group">
             <label>Nombre de la reunión *</label>
@@ -210,7 +236,7 @@ const ScheduleMeeting: React.FC = () => {
             <input
               type="date"
               value={date}
-              onChange={handleDateChange}
+              onChange={(e) => setDate(e.target.value)}
             />
           </div>
 
@@ -292,7 +318,7 @@ const ScheduleMeeting: React.FC = () => {
               Cancelar
             </button>
             <button type="button" className="btn-submit" onClick={handleSubmit}>
-              Programar Reunión
+              Guardar Cambios
             </button>
           </div>
         </div>
@@ -301,4 +327,4 @@ const ScheduleMeeting: React.FC = () => {
   );
 };
 
-export default ScheduleMeeting;
+export default EditMeeting;

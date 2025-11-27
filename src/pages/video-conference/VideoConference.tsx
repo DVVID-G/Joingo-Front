@@ -17,7 +17,7 @@ const VideoConference: React.FC = () => {
   const [messages, setMessages] = useState([
     { id: 1, user: "Sistema", text: "Bienvenido a la videoconferencia", time: "10:00" },
   ]);
-  const [participants, setParticipants] = useState([
+  const [participants] = useState([
     { id: 1, name: "Usuario Principal" },
     { id: 2, name: "Usuario 1" },
     { id: 3, name: "Usuario 2" },

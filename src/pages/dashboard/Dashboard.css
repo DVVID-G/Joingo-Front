@@ -264,6 +264,7 @@
   gap: 12px;
 }
 
+.edit-meeting-btn,
 .delete-meeting-btn {
   display: flex;
   align-items: center;
@@ -279,18 +280,21 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -4px rgba(0, 0, 0, 0.10);
 }
 
+.edit-meeting-btn:hover,
 .delete-meeting-btn:hover {
   background: #f0f4ff;
   transform: scale(1.05);
   box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.15), 0 6px 8px -6px rgba(0, 0, 0, 0.10);
 }
 
+.edit-meeting-btn svg,
 .delete-meeting-btn svg {
   width: 20px;
   height: 20px;
   stroke: #155DFC;
 }
 
+.edit-meeting-btn:hover svg,
 .delete-meeting-btn:hover svg {
   stroke: #0d47d1;
 }
@@ -542,5 +546,322 @@
     height: 80px;
     margin-top: 12px;
     align-self: center;
+  }
+}
+
+/* RESPONSIVE - Altura reducida (Pantallas cortas) */
+@media (max-height: 800px) {
+  .dashboard-content {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .principal-containers {
+    padding: 14px;
+    gap: 12px;
+    flex-direction: column;
+  }
+
+  .left-content > * {
+    margin-bottom: 0;
+  }
+
+  .container-title {
+    font-size: 22px;
+  }
+
+  .container-text {
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+
+  .img-container {
+    width: 140px;
+    height: 140px;
+  }
+
+  .container-button {
+    padding: 10px 20px;
+    height: 38px;
+    font-size: 13px;
+  }
+
+  .buttons-wrapper {
+    gap: 10px;
+  }
+
+  .secundary-container {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .secundary-title {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .meets-container {
+    padding: 10px;
+  }
+
+  .meets-container h3 {
+    font-size: 14px;
+  }
+
+  .play-container {
+    width: 38px;
+    height: 38px;
+    padding: 9px;
+  }
+
+  .edit-meeting-btn,
+  .delete-meeting-btn {
+    width: 38px;
+    height: 38px;
+    padding: 9px;
+  }
+
+  .no-meetings {
+    padding: 16px;
+    font-size: 13px;
+  }
+}
+
+@media (max-height: 700px) {
+  .dashboard-header {
+    padding: 12px 20px;
+  }
+
+  .logo-text {
+    font-size: 24px;
+  }
+
+  .nav-links {
+    gap: 20px;
+  }
+
+  .dashboard-content {
+    padding: 12px;
+    gap: 12px;
+    grid-template-columns: 1fr;
+  }
+
+  .left-content,
+  .right-content {
+    display: block;
+  }
+
+  .principal-containers {
+    padding: 12px;
+    gap: 10px;
+    flex-direction: column;
+    margin-bottom: 12px;
+  }
+
+  .container-title {
+    font-size: 20px;
+  }
+
+  .container-text {
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+
+  .img-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .container-button {
+    padding: 9px 16px;
+    height: 36px;
+    font-size: 12px;
+  }
+
+  .buttons-wrapper {
+    gap: 8px;
+  }
+
+  .secundary-container {
+    padding: 10px;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .secundary-title {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  .meets-container {
+    padding: 8px;
+  }
+
+  .meeting-title,
+  .meeting-text {
+    font-size: 12px;
+  }
+
+  .meets-container h3 {
+    font-size: 13px;
+  }
+
+  .play-container {
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+  }
+
+  .play-container img {
+    width: 22px;
+  }
+
+  .edit-meeting-btn,
+  .delete-meeting-btn {
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+  }
+
+  .edit-meeting-btn svg,
+  .delete-meeting-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .container-actions {
+    padding: 6px;
+  }
+
+  .action {
+    padding: 6px;
+    gap: 8px;
+  }
+
+  .icon-container {
+    width: 32px;
+    height: 32px;
+  }
+
+  .no-meetings {
+    padding: 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-height: 600px) {
+  .dashboard-header {
+    padding: 8px 12px;
+  }
+
+  .logo-text {
+    font-size: 20px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .dashboard-content {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .principal-containers {
+    padding: 10px;
+    gap: 8px;
+    flex-direction: column;
+    margin-bottom: 8px;
+  }
+
+  .container-title {
+    font-size: 18px;
+  }
+
+  .container-text {
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+
+  .img-container {
+    width: 100px;
+    height: 100px;
+  }
+
+  .container-button {
+    padding: 8px 12px;
+    height: 32px;
+    font-size: 11px;
+  }
+
+  .buttons-wrapper {
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .secundary-container {
+    padding: 8px;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .secundary-title {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  .meets-container {
+    padding: 6px;
+  }
+
+  .meeting-title,
+  .meeting-text {
+    font-size: 11px;
+  }
+
+  .meets-container h3 {
+    font-size: 12px;
+  }
+
+  .play-container {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+  }
+
+  .play-container img {
+    width: 20px;
+  }
+
+  .edit-meeting-btn,
+  .delete-meeting-btn {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+  }
+
+  .edit-meeting-btn svg,
+  .delete-meeting-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .container-actions {
+    padding: 4px;
+  }
+
+  .action {
+    padding: 4px;
+    gap: 6px;
+  }
+
+  .icon-container {
+    width: 28px;
+    height: 28px;
+  }
+
+  .no-meetings {
+    padding: 8px;
+    font-size: 11px;
   }
 }
