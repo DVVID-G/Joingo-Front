@@ -4,6 +4,8 @@ import { auth } from '../../lib/firebase.config';
 import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 
+//Cambio temporal para que git reconozaca el cambio del archivo
+
 const Profile: React.FC = () => {
   const navigate = useNavigate();
   const { user, logout, setUser } = useAuthStore() as any;
