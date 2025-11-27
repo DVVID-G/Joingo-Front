@@ -42,9 +42,6 @@ const VideoConference: React.FC = () => {
           <h1 className="logo-text">JoinGo</h1>
           <span className="meeting-id">{meeting?.meetingName || "Reunión"}</span>
         </div>
-        <div className="header-actions">
-          <button className="btn-close" onClick={handleEndCall}>×</button>
-        </div>
       </header>
 
       {/* Main Content */}
@@ -199,15 +196,6 @@ const VideoConference: React.FC = () => {
               <path d="M23 1L1 23M1 1l22 22"></path>
             </svg>
             <span>Salir</span>
-          </button>
-        </div>
-
-        <div className="controls-right">
-          <button className="control-btn" title="Configuración">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3"></path>
-            </svg>
           </button>
         </div>
       </div>
