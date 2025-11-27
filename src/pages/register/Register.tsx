@@ -6,6 +6,7 @@ import "../login/Login.css";
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const { loginWithGoogle } = useAuthStore();
+  const { setUser } = useAuthStore() as any;
 
   const [form, setForm] = useState({
     email: "",
@@ -69,12 +70,54 @@ const Register: React.FC = () => {
       const data = await resp.json();
       console.log("Usuario registrado:", data);
 
-      // Guardar idToken si el backend lo devuelve
-      if (data.data?.idToken) {
-        localStorage.setItem("idToken", data.data.idToken);
+      // If backend returned an idToken, use it; otherwise try to log in to obtain it.
+      let idToken = data?.data?.idToken;
+
+      if (!idToken) {
+        try {
+          const loginResp = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: form.email, password: form.password }),
+          });
+
+          if (loginResp.ok) {
+            const loginData = await loginResp.json();
+            idToken = loginData?.data?.idToken;
+            if (idToken) localStorage.setItem('idToken', idToken);
+          } else {
+            console.warn('No se pudo iniciar sesión tras registro');
+          }
+        } catch (err) {
+          console.warn('Error logging in after register', err);
+        }
+      } else {
+        localStorage.setItem('idToken', idToken);
       }
 
-      navigate("/dashboard");
+      // If we have an idToken, fetch /api/users/me and set user in Zustand
+      if (idToken) {
+        try {
+          const meResp = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${idToken}`,
+            },
+          });
+
+          if (meResp.ok) {
+            const meData = await meResp.json();
+            if (meData?.data) setUser(meData.data);
+          } else {
+            console.warn('No se pudo obtener user desde /api/users/me tras registro');
+          }
+        } catch (err) {
+          console.warn('Error fetching /api/users/me after register', err);
+        }
+      }
+
+      navigate('/dashboard');
     } catch (err) {
       console.error(err);
       setError("Error en la conexión con el backend");
