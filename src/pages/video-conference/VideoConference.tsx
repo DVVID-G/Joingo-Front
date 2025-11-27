@@ -12,9 +12,15 @@ const VideoConference: React.FC = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isParticipantsOpen, setIsParticipantsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([
     { id: 1, user: "Sistema", text: "Bienvenido a la videoconferencia", time: "10:00" },
+  ]);
+  const [participants, setParticipants] = useState([
+    { id: 1, name: "Usuario Principal" },
+    { id: 2, name: "Usuario 1" },
+    { id: 3, name: "Usuario 2" },
   ]);
 
   const handleSendMessage = () => {
@@ -119,6 +125,26 @@ const VideoConference: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* Participants Panel */}
+        {isParticipantsOpen && (
+          <div className="participants-panel">
+            <div className="participants-header">
+              <h3>Participantes</h3>
+              <button className="btn-close-participants" onClick={() => setIsParticipantsOpen(false)}>×</button>
+            </div>
+            <div className="participants-list">
+              {participants.map((participant) => (
+                <div key={participant.id} className="participant-item">
+                  <div className="participant-avatar">
+                    <div className="avatar-circle">{participant.name.charAt(0)}</div>
+                  </div>
+                  <span className="participant-name-text">{participant.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Controls Bar */}
@@ -178,6 +204,20 @@ const VideoConference: React.FC = () => {
               <line x1="12" y1="17" x2="12" y2="21"></line>
             </svg>
             <span>Compartir</span>
+          </button>
+
+          <button
+            className="control-btn"
+            onClick={() => setIsParticipantsOpen(!isParticipantsOpen)}
+            title="Participantes"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Participantes</span>
           </button>
 
           <button
