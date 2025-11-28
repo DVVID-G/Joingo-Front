@@ -42,23 +42,39 @@ const useMeetingStore = create<MeetingStore>()(
 
           // Persist meeting to backend and then store locally. Returns the created meeting from server.
           addMeeting: async (meetingData) => {
-            const doFetchWithRetry = async (input: RequestInfo, init?: RequestInit) => {
-              const token1 = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
-                console.debug('[useMeetingStore] doFetchWithRetry first attempt token present:', !!token1);
-                const headers1 = Object.assign({ 'Content-Type': 'application/json' }, init?.headers || {}, token1 ? { Authorization: `Bearer ${token1}` } : {});
-                console.debug('[useMeetingStore] doFetchWithRetry first attempt', { input, headers: headers1 });
-                let res;
-                try {
-                  res = await fetch(input, { ...(init || {}), headers: headers1 });
-                } catch (err: any) {
-                  console.error('[useMeetingStore] fetch exception (first attempt):', err?.name, err?.message || err);
-                  throw err;
+            const getClientToken = async () => {
+              // Prefer Firebase SDK token when available (frontend signed-in via Firebase)
+              try {
+                if (auth.currentUser) {
+                  const t = await auth.currentUser.getIdToken(true);
+                  if (t) return { token: t, source: 'firebase' };
                 }
+              } catch (e) {
+                console.warn('[useMeetingStore] getClientToken: firebase getIdToken error', e);
+              }
+              // Fallback to token stored by legacy/email-login flow
+              const stored = localStorage.getItem('idToken');
+              if (stored) return { token: stored, source: 'localStorage' };
+              return { token: null, source: 'none' };
+            };
+
+            const doFetchWithRetry = async (input: RequestInfo, init?: RequestInit) => {
+              const t1 = await getClientToken();
+              console.debug('[useMeetingStore] doFetchWithRetry first attempt token source:', t1.source, 'present:', !!t1.token);
+              const headers1 = Object.assign({ 'Content-Type': 'application/json' }, init?.headers || {}, t1.token ? { Authorization: `Bearer ${t1.token}` } : {});
+              console.debug('[useMeetingStore] doFetchWithRetry first attempt', { input, headers: headers1 });
+              let res;
+              try {
+                res = await fetch(input, { ...(init || {}), headers: headers1 });
+              } catch (err: any) {
+                console.error('[useMeetingStore] fetch exception (first attempt):', err?.name, err?.message || err);
+                throw err;
+              }
               if (res.status !== 401) return res;
               try {
-                const token2 = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
-                console.debug('[useMeetingStore] doFetchWithRetry second attempt token present:', !!token2);
-                const headers2 = Object.assign({ 'Content-Type': 'application/json' }, init?.headers || {}, token2 ? { Authorization: `Bearer ${token2}` } : {});
+                const t2 = await getClientToken();
+                console.debug('[useMeetingStore] doFetchWithRetry second attempt token source:', t2.source, 'present:', !!t2.token);
+                const headers2 = Object.assign({ 'Content-Type': 'application/json' }, init?.headers || {}, t2.token ? { Authorization: `Bearer ${t2.token}` } : {});
                 console.debug('[useMeetingStore] doFetchWithRetry second attempt', { input, headers: headers2 });
                 try {
                   res = await fetch(input, { ...(init || {}), headers: headers2 });
@@ -121,17 +137,31 @@ const useMeetingStore = create<MeetingStore>()(
 
       // Fetch meetings owned by the authenticated user from backend
       fetchMyMeetings: async () => {
+        const getClientToken = async () => {
+          try {
+            if (auth.currentUser) {
+              const t = await auth.currentUser.getIdToken(true);
+              if (t) return { token: t, source: 'firebase' };
+            }
+          } catch (e) {
+            console.warn('[useMeetingStore] getClientToken: firebase getIdToken error', e);
+          }
+          const stored = localStorage.getItem('idToken');
+          if (stored) return { token: stored, source: 'localStorage' };
+          return { token: null, source: 'none' };
+        };
+
         const doFetchWithRetry = async (url: string, init?: RequestInit) => {
           try {
-            const token1 = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
-            console.debug('[useMeetingStore] fetchMyMeetings first attempt token present:', !!token1);
-            const headers1 = Object.assign({}, init?.headers || {}, token1 ? { Authorization: `Bearer ${token1}` } : {});
+            const t1 = await getClientToken();
+            console.debug('[useMeetingStore] fetchMyMeetings first attempt token source:', t1.source, 'present:', !!t1.token);
+            const headers1 = Object.assign({}, init?.headers || {}, t1.token ? { Authorization: `Bearer ${t1.token}` } : {});
             let res = await fetch(url, { ...(init || {}), headers: headers1 });
             if (res.status !== 401) return res;
             // On 401 try once more with a fresh token
-            const token2 = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
-            console.debug('[useMeetingStore] fetchMyMeetings retry token present:', !!token2);
-            const headers2 = Object.assign({}, init?.headers || {}, token2 ? { Authorization: `Bearer ${token2}` } : {});
+            const t2 = await getClientToken();
+            console.debug('[useMeetingStore] fetchMyMeetings retry token source:', t2.source, 'present:', !!t2.token);
+            const headers2 = Object.assign({}, init?.headers || {}, t2.token ? { Authorization: `Bearer ${t2.token}` } : {});
             res = await fetch(url, { ...(init || {}), headers: headers2 });
             return res;
           } catch (err) {
