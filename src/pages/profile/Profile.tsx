@@ -11,6 +11,10 @@ const Profile: React.FC = () => {
   const { user, logout, setUser } = useAuthStore() as any;
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
+  // Prefer VITE_API_URL or VITE_API_BASE; fall back to relative path
+  const _rawApi = (import.meta.env.VITE_API_URL as string) || (import.meta.env.VITE_API_BASE as string) || '';
+  const API_BASE = _rawApi.replace(/\/$/, '');
+
   const [editMode, setEditMode] = useState(false);
 
   // Editable fields
