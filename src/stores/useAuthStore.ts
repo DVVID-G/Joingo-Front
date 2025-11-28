@@ -36,6 +36,7 @@ const useAuthStore = create<AuthStore>((set) => ({
                 if (token) {
                     try {
                         localStorage.setItem('idToken', token);
+                        try { window.dispatchEvent(new CustomEvent('idTokenUpdated')); } catch (e) { /** ignore */ }
                     } catch (e) {
                         // ignore storage errors
                     }
@@ -61,6 +62,7 @@ const useAuthStore = create<AuthStore>((set) => ({
         } else {
             set({ user: null });
             try { localStorage.removeItem('idToken'); } catch (e) { /** ignore */ }
+            try { window.dispatchEvent(new CustomEvent('idTokenUpdated')); } catch (e) { /** ignore */ }
         }
     });
 
@@ -72,6 +74,7 @@ const useAuthStore = create<AuthStore>((set) => ({
                     const token = await fbUser.getIdToken(true);
                     if (token) {
                         try { localStorage.setItem('idToken', token); } catch (e) { /** ignore */ }
+                        try { window.dispatchEvent(new CustomEvent('idTokenUpdated')); } catch (e) { /** ignore */ }
                     }
                 } catch (e) {
                     console.warn('useAuthStore: onIdTokenChanged failed to refresh token', e);
