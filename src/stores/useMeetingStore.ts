@@ -43,8 +43,11 @@ const useMeetingStore = create<MeetingStore>()(
 
           // Persist meeting to backend and then store locally. Returns the created meeting from server.
           addMeeting: async (meetingData) => {
-            try {
-              const token = auth.currentUser ? await auth.currentUser.getIdToken() : null;
+              try {
+              // Ensure we have a fresh ID token (force refresh) before calling protected endpoints.
+              // This will help avoid using an expired token which would cause a 401.
+              const token = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
+              console.debug('[useMeetingStore] addMeeting token present:', !!token);
               const res = await fetch(`${API_BASE_CLEAN}/api/meetings`, {
                 method: 'POST',
                 headers: {
@@ -101,8 +104,10 @@ const useMeetingStore = create<MeetingStore>()(
 
       // Fetch meetings owned by the authenticated user from backend
       fetchMyMeetings: async () => {
-        try {
-          const token = auth.currentUser ? await auth.currentUser.getIdToken() : null;
+          try {
+          // Force-refresh token to avoid expired token causing 401.
+          const token = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
+          console.debug('[useMeetingStore] fetchMyMeetings token present:', !!token);
           const res = await fetch(`${API_BASE_CLEAN}/api/meetings`, {
             method: 'GET',
             headers: {
