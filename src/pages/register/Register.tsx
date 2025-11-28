@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore"; 
 import "../login/Login.css";
+import { getAuth, signInWithPopup, GithubAuthProvider } from "firebase/auth";
 
 /**
  * Register Component
@@ -163,6 +164,30 @@ const Register: React.FC = () => {
       setError("No se pudo registrar con Google");
     }
   };
+  /**
+   * Register/Login using Github
+   */
+  const handleLoginGithub = async () => {
+          try {
+              const auth = getAuth();
+              const provider = new GithubAuthProvider();
+                  provider.setCustomParameters({
+                  allow_signup: "false"
+              });
+  
+              const result = await signInWithPopup(auth, provider);
+              const idToken = await result.user.getIdToken();
+  
+              localStorage.setItem("idToken", idToken);
+  
+              console.log("🐱 GitHub login OK:", result.user);
+              navigate("/dashboard");
+  
+          } catch (err) {
+              console.error("GitHub error:", err);
+              setError("Error al iniciar sesión con GitHub");
+          }
+  };
 
   return (
     <div className="login-split-container">
@@ -259,7 +284,13 @@ const Register: React.FC = () => {
                 <img src="/assets/images/google.png" alt="Google" width={24} height={24} />
                 <span>Google</span>
               </button>
+              {/* GITHUB */}
+              <button onClick={handleLoginGithub} type="button" className="login-google-btn">
+                  <img src="/assets/images/github-mark.png" alt="GitHub" width={24} height={24} />
+                  <span>GitHub</span>
+              </button>
             </div>
+
 
             {/* Error message */}
             {error && <p className="login-error">{error}</p>}
