@@ -43,35 +43,41 @@ const useMeetingStore = create<MeetingStore>()(
 
           // Persist meeting to backend and then store locally. Returns the created meeting from server.
           addMeeting: async (meetingData) => {
+            const doFetchWithRetry = async (input: RequestInfo, init?: RequestInit) => {
+              const token1 = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
+              console.debug('[useMeetingStore] doFetchWithRetry first attempt token present:', !!token1);
+              const headers1 = Object.assign({ 'Content-Type': 'application/json' }, init?.headers || {}, token1 ? { Authorization: `Bearer ${token1}` } : {});
+              let res = await fetch(input, { ...(init || {}), headers: headers1 });
+              if (res.status !== 401) return res;
               try {
-              // Ensure we have a fresh ID token (force refresh) before calling protected endpoints.
-              // This will help avoid using an expired token which would cause a 401.
-              const token = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
-              console.debug('[useMeetingStore] addMeeting token present:', !!token);
-              const res = await fetch(`${API_BASE_CLEAN}/api/meetings`, {
+                const token2 = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
+                console.debug('[useMeetingStore] doFetchWithRetry second attempt token present:', !!token2);
+                const headers2 = Object.assign({ 'Content-Type': 'application/json' }, init?.headers || {}, token2 ? { Authorization: `Bearer ${token2}` } : {});
+                res = await fetch(input, { ...(init || {}), headers: headers2 });
+                return res;
+              } catch (e) {
+                return res;
+              }
+            };
+
+            try {
+              const res = await doFetchWithRetry(`${API_BASE_CLEAN}/api/meetings`, {
                 method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  ...(token ? { Authorization: `Bearer ${token}` } : {}),
-                },
                 body: JSON.stringify({ metadata: meetingData }),
               });
+
               if (!res.ok) {
-                const bodyText = await res.text();
-                // If the server says the request is unauthorized, sign the user out and redirect to login.
+                const bodyText = await res.text().catch(() => '');
                 if (res.status === 401) {
-                  console.error('Failed to create meeting on server - unauthorized. Signing out.', bodyText);
+                  console.error('Failed to create meeting on server - unauthorized after retry. Signing out.', bodyText);
                   try {
-                    // Trigger the standard logout flow (clears firebase state)
                     await useAuthStore.getState().logout();
                   } catch (e) {
                     console.error('Error during auto-logout after 401', e);
                   }
-                  // Redirect to login page so user can re-authenticate
                   window.location.replace('/login');
                   return;
                 }
-                // For other errors, log and return without silently creating a local-only meeting.
                 console.error('Failed to create meeting on server', res.status, bodyText);
                 return;
               }
@@ -79,7 +85,6 @@ const useMeetingStore = create<MeetingStore>()(
               const payload = await res.json();
               const created = payload?.data ?? null;
               if (created) {
-                // normalize server meeting to frontend Meeting shape (metadata may contain UI fields)
                 const meta = created.metadata || {};
                 const normalized: Meeting = {
                   id: created.id,
@@ -96,7 +101,6 @@ const useMeetingStore = create<MeetingStore>()(
                 set((state) => ({ meetings: [...state.meetings, normalized] }));
               }
             } catch (err) {
-              // Network or unexpected error — log and propagate. Do not silently create local-only meetings.
               console.error('Error creating meeting', err);
               return;
             }
