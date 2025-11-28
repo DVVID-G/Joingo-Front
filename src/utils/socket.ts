@@ -11,7 +11,7 @@ let socket: Socket | null = null;
 export async function initSocket(getToken: () => Promise<string | null>, url?: string) {
   if (socket) return socket;
   const token = await getToken();
-  const serverUrl = url || (import.meta.env.VITE_CHAT_SERVICE_URL as string) || 'http://localhost:3001';
+  const serverUrl = url || (import.meta.env.VITE_CHAT_SERVICE_URL as string) || '';
   socket = io(serverUrl, {
     auth: {
       token: token || undefined,
