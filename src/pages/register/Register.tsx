@@ -12,7 +12,8 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
   const { loginWithGoogle } = useAuthStore();
   const { setUser } = useAuthStore() as any;
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const rawApi = (import.meta.env.VITE_API_URL as string) || (import.meta.env.VITE_API_BASE as string) || '';
+  const API_URL = rawApi.replace(/\/$/, '');
 
 
   // Local state for form fields
@@ -98,7 +99,7 @@ const Register: React.FC = () => {
 
       if (!idToken) {
         try {
-          const loginResp = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+          const loginResp = await fetch(`${API_URL}/api/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: form.email, password: form.password }),
@@ -123,7 +124,7 @@ const Register: React.FC = () => {
        */
       if (idToken) {
         try {
-          const meResp = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
+          const meResp = await fetch(`${API_URL}/api/users/me`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
