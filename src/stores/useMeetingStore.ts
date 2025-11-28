@@ -45,15 +45,28 @@ const useMeetingStore = create<MeetingStore>()(
           addMeeting: async (meetingData) => {
             const doFetchWithRetry = async (input: RequestInfo, init?: RequestInit) => {
               const token1 = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
-              console.debug('[useMeetingStore] doFetchWithRetry first attempt token present:', !!token1);
-              const headers1 = Object.assign({ 'Content-Type': 'application/json' }, init?.headers || {}, token1 ? { Authorization: `Bearer ${token1}` } : {});
-              let res = await fetch(input, { ...(init || {}), headers: headers1 });
+                console.debug('[useMeetingStore] doFetchWithRetry first attempt token present:', !!token1);
+                const headers1 = Object.assign({ 'Content-Type': 'application/json' }, init?.headers || {}, token1 ? { Authorization: `Bearer ${token1}` } : {});
+                console.debug('[useMeetingStore] doFetchWithRetry first attempt', { input, headers: headers1 });
+                let res;
+                try {
+                  res = await fetch(input, { ...(init || {}), headers: headers1 });
+                } catch (err: any) {
+                  console.error('[useMeetingStore] fetch exception (first attempt):', err?.name, err?.message || err);
+                  throw err;
+                }
               if (res.status !== 401) return res;
               try {
                 const token2 = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
                 console.debug('[useMeetingStore] doFetchWithRetry second attempt token present:', !!token2);
                 const headers2 = Object.assign({ 'Content-Type': 'application/json' }, init?.headers || {}, token2 ? { Authorization: `Bearer ${token2}` } : {});
-                res = await fetch(input, { ...(init || {}), headers: headers2 });
+                console.debug('[useMeetingStore] doFetchWithRetry second attempt', { input, headers: headers2 });
+                try {
+                  res = await fetch(input, { ...(init || {}), headers: headers2 });
+                } catch (err: any) {
+                  console.error('[useMeetingStore] fetch exception (second attempt):', err?.name, err?.message || err);
+                  throw err;
+                }
                 return res;
               } catch (e) {
                 return res;
@@ -61,10 +74,12 @@ const useMeetingStore = create<MeetingStore>()(
             };
 
             try {
-              const res = await doFetchWithRetry(`${API_BASE_CLEAN}/api/meetings`, {
-                method: 'POST',
-                body: JSON.stringify({ metadata: meetingData }),
-              });
+                  const url = `${API_BASE_CLEAN}/api/meetings`;
+                  console.debug('[useMeetingStore] addMeeting calling', { url });
+                  const res = await doFetchWithRetry(url, {
+                    method: 'POST',
+                    body: JSON.stringify({ metadata: meetingData }),
+                  });
 
               if (!res.ok) {
                 const bodyText = await res.text().catch(() => '');
@@ -108,20 +123,34 @@ const useMeetingStore = create<MeetingStore>()(
 
       // Fetch meetings owned by the authenticated user from backend
       fetchMyMeetings: async () => {
+        const doFetchWithRetry = async (url: string, init?: RequestInit) => {
           try {
-          // Force-refresh token to avoid expired token causing 401.
-          const token = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
-          console.debug('[useMeetingStore] fetchMyMeetings token present:', !!token);
-          const res = await fetch(`${API_BASE_CLEAN}/api/meetings`, {
-            method: 'GET',
-            headers: {
-              ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            },
-          });
+            const token1 = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
+            console.debug('[useMeetingStore] fetchMyMeetings first attempt token present:', !!token1);
+            const headers1 = Object.assign({}, init?.headers || {}, token1 ? { Authorization: `Bearer ${token1}` } : {});
+            let res = await fetch(url, { ...(init || {}), headers: headers1 });
+            if (res.status !== 401) return res;
+            // On 401 try once more with a fresh token
+            const token2 = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
+            console.debug('[useMeetingStore] fetchMyMeetings retry token present:', !!token2);
+            const headers2 = Object.assign({}, init?.headers || {}, token2 ? { Authorization: `Bearer ${token2}` } : {});
+            res = await fetch(url, { ...(init || {}), headers: headers2 });
+            return res;
+          } catch (err) {
+            // Network or CORS error — bubble up for caller to handle
+            throw err;
+          }
+        };
+
+        try {
+          const url = `${API_BASE_CLEAN}/api/meetings`;
+          console.debug('[useMeetingStore] fetchMyMeetings calling', { url });
+          const res = await doFetchWithRetry(url, { method: 'GET' });
           if (!res.ok) {
-            const body = await res.text();
+            // If unauthorized after retry, force logout. For other errors, log for debugging.
+            const body = await res.text().catch(() => '');
             if (res.status === 401) {
-              console.error('Failed to fetch meetings for user - unauthorized. Signing out.', body);
+              console.error('[useMeetingStore] fetchMyMeetings: unauthorized after retry — signing out.', body);
               try {
                 await useAuthStore.getState().logout();
               } catch (e) {
@@ -130,13 +159,13 @@ const useMeetingStore = create<MeetingStore>()(
               window.location.replace('/login');
               return;
             }
-            console.error('Failed to fetch meetings for user', res.status, body);
+            console.error('[useMeetingStore] fetchMyMeetings: non-OK response', res.status, body);
             return;
           }
-          const payload = await res.json();
+
+          const payload = await res.json().catch(() => ({}));
           const data = payload?.data ?? [];
           if (Array.isArray(data)) {
-            // Normalize meetings from server
             const normalized = data.map((m: any) => {
               const meta = m.metadata || {};
               return {
@@ -155,7 +184,8 @@ const useMeetingStore = create<MeetingStore>()(
             set(() => ({ meetings: normalized }));
           }
         } catch (err) {
-          console.error('Error fetching meetings', err);
+          // Network or unexpected error — do not auto-logout for transient network errors.
+          console.error('[useMeetingStore] Error fetching meetings (network/preflight/CORS?)', err);
         }
       },
 
