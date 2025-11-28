@@ -2,7 +2,9 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { auth } from '../lib/firebase.config';
 
-const API_BASE = (import.meta.env.VITE_API_BASE as string) || 'http://localhost:3000';
+// Prefer `VITE_API_URL` in deployments. Fall back to legacy `VITE_API_BASE` or relative path ''
+const API_BASE = (import.meta.env.VITE_API_URL as string) || (import.meta.env.VITE_API_BASE as string) || '';
+const API_BASE_CLEAN = API_BASE.replace(/\/$/, '');
 
 export interface Meeting {
   id: string;
@@ -42,7 +44,7 @@ const useMeetingStore = create<MeetingStore>()(
           addMeeting: async (meetingData) => {
             try {
               const token = auth.currentUser ? await auth.currentUser.getIdToken() : null;
-              const res = await fetch(`${API_BASE}/api/meetings`, {
+              const res = await fetch(`${API_BASE_CLEAN}/api/meetings`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -97,7 +99,7 @@ const useMeetingStore = create<MeetingStore>()(
       fetchMyMeetings: async () => {
         try {
           const token = auth.currentUser ? await auth.currentUser.getIdToken() : null;
-          const res = await fetch(`${API_BASE}/api/meetings`, {
+          const res = await fetch(`${API_BASE_CLEAN}/api/meetings`, {
             method: 'GET',
             headers: {
               ...(token ? { Authorization: `Bearer ${token}` } : {}),
