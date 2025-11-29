@@ -161,7 +161,7 @@ const Login: React.FC = () => {
 
                             {/* GITHUB */}
                             <button onClick={handleLoginGithub} type="button" className="login-google-btn">
-                                <img src="/assets/images/github.png" alt="GitHub" width={24} height={24} />
+                                <img src="/assets/images/github-mark.png" alt="GitHub" width={24} height={24} />
                                 <span>GitHub</span>
                             </button>
 
