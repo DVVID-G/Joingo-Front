@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./VideoConference.css";
 import { useNavigate, useParams } from "react-router-dom";
 import useMeetingStore from "../../stores/useMeetingStore";
 import ChatPanel from "../../components/chat/ChatPanel";
+import { startVoiceChat, stopVoiceChat, setMicrophoneEnabled } from "../../utils/webRtc";
 
 /**
  * VideoConference Component
@@ -53,11 +54,77 @@ const VideoConference: React.FC = () => {
     { id: 2, name: "Usuario 1" },
     { id: 3, name: "Usuario 2" },
   ]);
+  const [voiceReady, setVoiceReady] = useState(false);
+  const [voiceError, setVoiceError] = useState<string | null>(null);
+  const [remoteStreams, setRemoteStreams] = useState<Record<string, MediaStream>>({});
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const localAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handleRemoteStream = useCallback((peerId: string, stream: MediaStream) => {
+    setRemoteStreams((prev) => ({ ...prev, [peerId]: stream }));
+  }, []);
+
+  const handlePeerLeft = useCallback((peerId: string) => {
+    setRemoteStreams((prev) => {
+      if (!prev[peerId]) return prev;
+      const copy = { ...prev };
+      delete copy[peerId];
+      return copy;
+    });
+  }, []);
 
   useEffect(() => {
     // If a meetingId is present (user joined by code), open chat panel by default
     if (meetingId) setIsChatOpen(true);
   }, [meetingId]);
+
+  useEffect(() => {
+    if (!meetingId) return undefined;
+    setVoiceError(null);
+    let cleanup: (() => void) | null = null;
+    let cancelled = false;
+
+    startVoiceChat(meetingId, {
+      onRemoteStream: handleRemoteStream,
+      onPeerLeft: handlePeerLeft
+    })
+      .then(({ stop, localStream: stream }) => {
+        if (cancelled) {
+          stop();
+          return;
+        }
+        cleanup = stop;
+        setVoiceReady(true);
+        setLocalStream(stream);
+        if (localAudioRef.current) {
+          localAudioRef.current.srcObject = stream;
+        }
+      })
+      .catch((err) => {
+        console.error("Voice chat initialization failed", err);
+        setVoiceError("Unable to start voice channel. Check microphone permissions or reload the page.");
+      });
+
+    return () => {
+      cancelled = true;
+      cleanup?.();
+      stopVoiceChat();
+      setVoiceReady(false);
+      setLocalStream(null);
+      setRemoteStreams({});
+    };
+  }, [meetingId, handlePeerLeft, handleRemoteStream]);
+
+  useEffect(() => {
+    setMicrophoneEnabled(!isMuted);
+    if (localStream) {
+      localStream.getAudioTracks().forEach((track) => {
+        track.enabled = !isMuted;
+      });
+    }
+  }, [isMuted, localStream]);
+
+  const remotePeerCount = Object.keys(remoteStreams).length;
 
   // Chat messages are handled by the `ChatPanel` component and the global store.
   // Local optimistic message state was removed to avoid duplication and unused-symbol
@@ -81,6 +148,18 @@ const VideoConference: React.FC = () => {
               <div className="meeting-id">{meeting?.meetingName || "Reunión"}</div>
               <div style={{ color: '#bbb', fontSize: 12, marginTop: 6 }}>
                 ID: <strong style={{ color: '#fff' }}>{meetingId || '—'}</strong>
+              </div>
+              <div
+                style={{
+                  marginTop: 8,
+                  fontSize: 11,
+                  padding: '4px 8px',
+                  borderRadius: 999,
+                  color: '#fff',
+                  backgroundColor: voiceError ? '#7f1d1d' : voiceReady ? '#166534' : '#1d4ed8'
+                }}
+              >
+                {voiceError || (voiceReady ? 'Voice channel connected' : 'Connecting voice channel…')}
               </div>
             </div>
             <button
@@ -126,6 +205,9 @@ const VideoConference: React.FC = () => {
             {/* Video Controls Overlay */}
             <div className="video-info">
               <span className="participant-name">Usuario Principal</span>
+              <span className="participant-name" style={{ fontSize: 12 }}>
+                Voice peers: {remotePeerCount + 1}
+              </span>
             </div>
           </div>
 
@@ -171,6 +253,19 @@ const VideoConference: React.FC = () => {
       </div>
 
       {/* Controls Bar */}
+      {voiceError && (
+        <div style={{
+          margin: '12px auto',
+          padding: '8px 12px',
+          backgroundColor: '#7f1d1d',
+          color: '#fff',
+          borderRadius: 8,
+          maxWidth: 600,
+          textAlign: 'center'
+        }}>
+          {voiceError}
+        </div>
+      )}
       <div className="controls-bar">
         <div className="controls-left">
           <span className="meeting-time">00:00</span>
@@ -262,8 +357,22 @@ const VideoConference: React.FC = () => {
           </button>
         </div>
       </div>
+      <audio ref={localAudioRef} autoPlay muted playsInline style={{ display: "none" }} />
+      {Object.entries(remoteStreams).map(([peerId, stream]) => (
+        <RemoteAudio key={peerId} peerId={peerId} stream={stream} />
+      ))}
     </div>
   );
 };
 
-export default VideoConference;
+  const RemoteAudio: React.FC<{ peerId: string; stream: MediaStream }> = ({ peerId, stream }) => {
+    const ref = useRef<HTMLAudioElement | null>(null);
+    useEffect(() => {
+      if (ref.current) {
+        ref.current.srcObject = stream;
+      }
+    }, [stream]);
+    return <audio ref={ref} data-peer-id={peerId} autoPlay playsInline style={{ display: "none" }} />;
+  };
+
+  export default VideoConference;
