@@ -3,7 +3,7 @@ import "./VideoConference.css";
 import { useNavigate, useParams } from "react-router-dom";
 import useMeetingStore from "../../stores/useMeetingStore";
 import ChatPanel from "../../components/chat/ChatPanel";
-import { startVoiceChat, stopVoiceChat, setMicrophoneEnabled } from "../../utils/webRtc";
+import { startVoiceChat, stopVoiceChat, setMicrophoneEnabled, forceUpdateAudioTrack } from "../../utils/webRtc";
 
 /**
  * VideoConference Component
@@ -115,14 +115,11 @@ const VideoConference: React.FC = () => {
     };
   }, [meetingId, handlePeerLeft, handleRemoteStream]);
 
-  useEffect(() => {
+    useEffect(() => {
     setMicrophoneEnabled(!isMuted);
-    if (localStream) {
-      localStream.getAudioTracks().forEach((track) => {
-        track.enabled = !isMuted;
-      });
-    }
-  }, [isMuted, localStream]);
+    forceUpdateAudioTrack(!isMuted);
+  }, [isMuted]);
+
 
   const remotePeerCount = Object.keys(remoteStreams).length;
 

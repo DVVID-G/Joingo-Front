@@ -159,5 +159,28 @@ export function setMicrophoneEnabled(enabled) {
     track.enabled = enabled;
   });
 }
-
+/**
+ * 
+ */
 export { voiceEvents, currentMeetingId };
+export function forceUpdateAudioTrack(enabled) {
+  if (!localStream) return;
+
+  const newTrack = localStream.getAudioTracks()[0];
+  if (!newTrack) return;
+
+  newTrack.enabled = enabled;
+
+  peers.forEach((peer) => {
+    try {
+      const sender = peer._pc
+        ?.getSenders()
+        ?.find((s) => s.track?.kind === "audio");
+
+      if (sender) sender.replaceTrack(newTrack);
+    } catch (err) {
+      console.warn("replaceTrack failed", err);
+    }
+  });
+}
+
